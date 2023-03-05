@@ -84,14 +84,16 @@ def decode_out(qc):
     for i,j in np.ndindex(outim.shape):
 
         bit = format(b, '0' + str(n-1) + 'b')
-        p_tot = marginalised_counts.get(bit)
-        p_i = answer.get(bit+'0')
+        p_tot = marginalised_counts.get(bit,0)
+        
+        if p_tot == 0:
+            pix_val = 0
+        else:
+            p_i = answer.get(bit+'0',0)
 
-        if p_i == None:
-            p_i = 0
-
-        pix_val = np.arccos(np.sqrt(p_i/p_tot)) * 255 * 2/np.pi
-        outim[i,j] = round(pix_val)
+            pix_val = np.arccos(np.sqrt(p_i/p_tot)) * 255 * 2/np.pi
+        
+        outim[i,j] = (pix_val)
 
         b+=1
     
@@ -99,39 +101,31 @@ def decode_out(qc):
 
 
 
-im = np.random.randint(0,256,(4,4))
+# im = np.random.randint(0,256,(4,4))
+im = np.array([[0,255,0,255],[255,0,255,0],[0,255,0,255],[255,0,255,0]])
 print(im)
 plt.imshow(im,cmap='gray', vmin=0, vmax=255)
-plt.show()
 
 conv = im_convert(im)
 qc = frqi_circuit(conv)
 qc.append(QFT(2,insert_barriers=True, name='QFT'),[1,2])
+qc.append(QFT(2,insert_barriers=True, name='QFT'),[3,4])
 qc.measure_all()
 
-# outim = decode_out(qc)
-# print(outim)
-# plt.imshow(outim,cmap='gray', vmin=0, vmax=255)
+# backend = Aer.get_backend('qasm_simulator')
+# results = execute(qc, backend=backend, shots=2048).result()
+# answer = results.get_counts()
+# plot_histogram(answer)
 # plt.show()
-
-outim = decode_out(qc)
-print(outim)
-plt.imshow(outim,cmap='gray', vmin=0, vmax=255)
-plt.show()
-
-conv_ = im_convert(outim)
-qc2 = frqi_circuit(conv_)
-qc2.append(QFT(2,insert_barriers=True, name='QFT').inverse(),[1,2])
-qc2.measure_all()
-
-outim2 = decode_out(qc2)
-print(outim2)
-plt.imshow(outim2,cmap='gray', vmin=0, vmax=255)
-plt.show()
-
-
 # qc.draw('mpl')
 # plt.show()
+
+imout = decode_out(qc)
+plt.figure()
+plt.imshow(imout,cmap='gray', vmin=0, vmax=255)
+print(imout)
+plt.show()
+
 
 
 
