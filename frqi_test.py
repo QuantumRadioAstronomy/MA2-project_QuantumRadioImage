@@ -1,4 +1,5 @@
 import numpy as np
+from skimage.transform import resize
 from qiskit import QuantumCircuit, QuantumRegister, ClassicalRegister, Aer, execute
 from qiskit.visualization import plot_histogram
 from qiskit.circuit.library import MCMT
@@ -91,7 +92,7 @@ def decode_out(qc):
         else:
             p_i = answer.get(bit+'0',0)
 
-            pix_val = np.arccos(np.sqrt(p_i/p_tot)) * 255 * 2/np.pi
+            pix_val = np.arccos(np.sqrt(p_i/p_tot)) * 2/np.pi * 255
         
         outim[i,j] = (pix_val)
 
@@ -99,31 +100,29 @@ def decode_out(qc):
     
     return outim
 
+def diff_rel(im1,im2): #for relative difference between in and out
 
+    
+    im = np.abs(im1 - im2)
+    s = np.sum(im.flatten())/(len(im1**2))
 
-# im = np.random.randint(0,256,(4,4))
-im = np.array([[0,255,0,255],[255,0,255,0],[0,255,0,255],[255,0,255,0]])
+    return s * 100/255
+
+im = np.random.randint(0,256,(16,16)) #generate random image
 print(im)
 plt.imshow(im,cmap='gray', vmin=0, vmax=255)
 
-conv = im_convert(im)
-qc = frqi_circuit(conv)
-qc.append(QFT(2,insert_barriers=True, name='QFT'),[1,2])
-qc.append(QFT(2,insert_barriers=True, name='QFT'),[3,4])
-qc.measure_all()
+conv = im_convert(im) #convert it in angles values
+qc = frqi_circuit(conv) #create the circuit
+# qc.append(QFT(2,insert_barriers=True, name='QFT'),[1,2])
+# qc.append(QFT(2,insert_barriers=True, name='QFT'),[3,4])
+qc.measure_all() #measure
 
-# backend = Aer.get_backend('qasm_simulator')
-# results = execute(qc, backend=backend, shots=2048).result()
-# answer = results.get_counts()
-# plot_histogram(answer)
-# plt.show()
-# qc.draw('mpl')
-# plt.show()
-
-imout = decode_out(qc)
+imout = decode_out(qc) #decode from measuring circuit
 plt.figure()
 plt.imshow(imout,cmap='gray', vmin=0, vmax=255)
 print(imout)
+
 plt.show()
 
 
