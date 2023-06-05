@@ -60,24 +60,21 @@ def frqi_circuit(im): #for square image 2^n * 2^n
         qc.barrier()
 
         i+=1
-
-    # qc.measure_all()
     
     return qc
 
-def decode_out(qc):
+def decode_out(qc,shot=2**16):
     
     n = qc.num_qubits
-    # print(n)
 
+    shots = shot
     backend = Aer.get_backend('qasm_simulator')
-    results = execute(qc, backend=backend, shots=2**16).result()
+    results = execute(qc, backend=backend, shots=shots).result()
     answer = results.get_counts()
-    # print(answer)
+
     qubits_of_interest = list(range(1,n))
     marginalised_results = marginal_counts(results, indices=qubits_of_interest)
     marginalised_counts = marginalised_results.get_counts()
-    # print(marginalised_counts)
 
     outim = np.zeros((int(2**((n-1)/2)), int(2**((n-1)/2))))
 
@@ -100,30 +97,21 @@ def decode_out(qc):
     
     return outim
 
-def diff_rel(im1,im2): #for relative difference between in and out
+def MSE(im1,im2):
+
+    im = (im1-im2)**2
+    s = np.sum(im.flatten())/(len(im1**2))
+
+    return s
+
+def diff_rel(im1,im2):
 
     
     im = np.abs(im1 - im2)
-    s = np.sum(im.flatten())/(len(im1**2))
+    s = np.sum(im.flatten())/(len(im1)**2)
 
     return s * 100/255
 
-im = np.random.randint(0,256,(16,16)) #generate random image
-print(im)
-plt.imshow(im,cmap='gray', vmin=0, vmax=255)
-
-conv = im_convert(im) #convert it in angles values
-qc = frqi_circuit(conv) #create the circuit
-# qc.append(QFT(2,insert_barriers=True, name='QFT'),[1,2])
-# qc.append(QFT(2,insert_barriers=True, name='QFT'),[3,4])
-qc.measure_all() #measure
-
-imout = decode_out(qc) #decode from measuring circuit
-plt.figure()
-plt.imshow(imout,cmap='gray', vmin=0, vmax=255)
-print(imout)
-
-plt.show()
 
 
 
