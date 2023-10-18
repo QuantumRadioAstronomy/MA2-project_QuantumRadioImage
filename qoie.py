@@ -1,15 +1,5 @@
 import numpy as np
-from skimage.transform import resize
-from scipy.fft import fft2, ifft2
-from skimage import io
-from qiskit import QuantumCircuit, QuantumRegister, ClassicalRegister, Aer, execute, transpile
-from qiskit.quantum_info import Statevector
-from qiskit.visualization import plot_histogram
-from qiskit.circuit.library import MCMT
-from qiskit.circuit.library import XGate
-from qiskit.circuit.library import QFT
-from qiskit.result import marginal_counts
-import matplotlib.pyplot as plt
+from qiskit import QuantumCircuit, Aer, execute
 
 
 def qpie_circuit(im): #for square image 2^n * 2^n
@@ -58,7 +48,7 @@ def diff_rel(im1,im2):
     im = np.abs(im1 - im2)
     s = np.sum(im.flatten())/(len(im1)**2)
 
-    return s * 100/255
+    return s * 100
 
 def MSE(im1,im2):
 
