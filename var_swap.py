@@ -1,6 +1,6 @@
 import numpy as np
 from qiskit import QuantumCircuit, QuantumRegister, ClassicalRegister, Aer, execute
-import qoie as qpie
+import QPIE as qpie
 import matplotlib.pyplot as plt
 from scipy.optimize import minimize
 

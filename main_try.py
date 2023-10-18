@@ -1,5 +1,5 @@
-import frqi_test as frqi
-import qoie as qpie
+import FRQI as frqi
+import QPIE as qpie
 import var_swap as cal
 import numpy as np
 from qiskit.circuit.library import QFT
