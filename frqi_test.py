@@ -1,12 +1,6 @@
 import numpy as np
-# from skimage.transform import resize
-from qiskit import QuantumCircuit, QuantumRegister, ClassicalRegister, Aer, execute
-from qiskit.visualization import plot_histogram
-from qiskit.circuit.library import MCMT
-from qiskit.circuit.library import XGate
-from qiskit.circuit.library import QFT
+from qiskit import QuantumCircuit, QuantumRegister, Aer, execute
 from qiskit.result import marginal_counts
-import matplotlib.pyplot as plt
 
 def theta(val): #linear transformation to get theta from pixel value 
     return val * np.pi/2
