@@ -1,5 +1,5 @@
 import numpy as np
-from skimage.transform import resize
+# from skimage.transform import resize
 from qiskit import QuantumCircuit, QuantumRegister, ClassicalRegister, Aer, execute
 from qiskit.visualization import plot_histogram
 from qiskit.circuit.library import MCMT
@@ -9,7 +9,7 @@ from qiskit.result import marginal_counts
 import matplotlib.pyplot as plt
 
 def theta(val): #linear transformation to get theta from pixel value 
-    return val/255 * np.pi/2
+    return val * np.pi/2
 
 
 def im_convert(im): #convert whole image in angles values
@@ -89,7 +89,7 @@ def decode_out(qc,shot=2**16):
         else:
             p_i = answer.get(bit+'0',0)
 
-            pix_val = np.arccos(np.sqrt(p_i/p_tot)) * 2/np.pi * 255
+            pix_val = np.arccos(np.sqrt(p_i/p_tot)) * 2/np.pi
         
         outim[i,j] = (pix_val)
 
@@ -110,7 +110,7 @@ def diff_rel(im1,im2):
     im = np.abs(im1 - im2)
     s = np.sum(im.flatten())/(len(im1)**2)
 
-    return s * 100/255
+    return s * 100
 
 
 
