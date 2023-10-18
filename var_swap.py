@@ -1,9 +1,8 @@
 import numpy as np
-from qiskit import QuantumCircuit, QuantumRegister, ClassicalRegister, Aer, execute, transpile
+from qiskit import QuantumCircuit, QuantumRegister, ClassicalRegister, Aer, execute
 import qoie as qpie
 import matplotlib.pyplot as plt
 from scipy.optimize import minimize
-import time
 
 def swap_test(state1, state2): #Function to perform swap test between 2 given states
     
