@@ -41,7 +41,7 @@ for i in range(50): #number of experience you want
     G = np.outer(g,g.T)
     V_ijtilda = G * V_ij #Observed visibilities
 
-    def loss(x):
+    def loss(x): #loss for least squares fct from scipy
         G = np.outer(x,x.T)
         V_reco = G*V_ij
         return (V_reco - V_ijtilda).flatten()
@@ -58,7 +58,7 @@ for i in range(50): #number of experience you want
 
     clas,nit = var.class_opti(parameters) #optimize with classical
     gd = var.grad_desc(parameters) #and with QGD
-    clas_full = lsq(loss, parameters) #and classical
+    clas_full = lsq(loss, parameters) #and classical with scipy lsq
 
     # We add to observations the results
 
